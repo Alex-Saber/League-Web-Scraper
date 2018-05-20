@@ -1,3 +1,4 @@
+from selenium import webdriver
 import bs4 as bs
 import urllib.request
 import pandas as pd
@@ -5,38 +6,53 @@ import pymongo
 import sys
 
 def grab_data():
-    #Getting Html from OP.GG for league data
-    sauce = urllib.request.urlopen('http://www.op.gg/statistics/champion/').read()
+    #Declaring variables
+    num_champs = 0
+    driver = webdriver.Chrome()
+    driver.get('http://www.op.gg/statistics/champion/')
+    #def grab_data():
+    sauce = driver.page_source
     soup = bs.BeautifulSoup(sauce, 'lxml')
-    n = soup.find('div', id='ChampionStatsTable')
+    champ_Stats = soup.find_all('td', class_=["ChampionName"])
+
+    champ_names = list()
+    champ_win_rate = list()
+    champ_games_played = list()
+    champ_KDA_ratio = list()
+    champ_CS_earned = list()
+    champ_gold_earned = list()
+    for data in champ_Stats:
+        champ_names.append(data.text.strip())
+        data = data.find_next_sibling('td')
+        champ_win_rate.append(data.text.strip())
+        data = data.find_next_sibling('td')
+        champ_games_played.append(data.text.strip())
+        data = data.find_next_sibling('td')
+        champ_KDA_ratio.append(data.text.strip())
+        data = data.find_next_sibling('td')
+        champ_CS_earned.append(data.text.strip())
+        data = data.find_next_sibling('td')
+        champ_gold_earned.append(data.text.strip())
+        num_champs += 1
+        print (data.text.strip())
+
 
     client = pymongo.MongoClient("mongodb://localhost")
     db = client.test
+    db.champs.drop()
+    db.create_collection('champs')
     champs = db.champs
-    champs.insert({'name':"Vayne",'win_rate':"60%"})
-    
-    return champs.find({'name':'Vayne'})[0]['name'] 
-    #n = soup.find_all('tr')
-    #for i in n:
-        #print (i.prettify())
+    for i in range(0, num_champs): 
+        champs.insert_one({'name': champ_names[i],
+                            'win_rate': champ_win_rate[i],
+                            'games_played': champ_games_played[i],
+                            'KDA_ratio': champ_KDA_ratio[i],
+                            'CS_earned': champ_CS_earned[i],
+                            'gold_earned': champ_gold_earned[i]})
 
-#print (soup.find_all('td'))
-#champion_Stats = soup.find('div', id='ChampionStatsTable') #, class_='Row Top')
-#for n in champion_Stats.find_children('td', class_="ChampionName"):
-#    print (n)
-#stats = champion_Stats.find_all('tr', class_="Row")
-
-#for n in stats:
- #   print (n.name)
-#champ_Name = stats.children[4]
-#print (champ_Name)
-#for stats in champion_Stats.children:
-#    print (stats)
-
-#for tr in champion_Stats.children:
-#    print (tr.get_text())
-#for tr in table_rows:
-#    td = tr.find_all('td', class_='Cell ChampionName')
-#    name = td.find('a')
-#    print (name.text)
-    
+    return {'names': champ_names, 
+            'win_rates': champ_win_rate, 
+            'games_played': champ_games_played, 
+            'KDA': champ_KDA_ratio, 
+            'CS': champ_CS_earned, 
+            'gold': champ_gold_earned }   

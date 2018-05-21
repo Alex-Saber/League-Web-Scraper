@@ -48,18 +48,22 @@ def store_data():
     # Connecting to MongoDB Database in order to store scraped champion data
     client = pymongo.MongoClient("mongodb://localhost")
     db = client.test
-    db.champs.drop()
-    db.create_collection('champs')
     champs = db.champs
     
-    # For each champion create a new dictionary with all of its 
+    # For each champion create a new document with all of its 
     # corresponding statistics and insert it into the MongoDB Database
-    for i in range(0, 140): 
-        champs.insert_one({'name': champ_names[i],
-                            'win_rate': champ_win_rate[i],
-                            'games_played': champ_games_played[i],
-                            'KDA_ratio': champ_KDA_ratio[i],
-                            'CS_earned': champ_CS_earned[i],
-                            'gold_earned': champ_gold_earned[i]})
+    for i in range(0, len(champ_names)):
+        # Query Database for champ name, 
+        # if it exists update it otherwise create a new document
+        champs.update_one({'name': champ_names[i]},
+                          { '$set': {
+                              'win_rate': champ_win_rate[i], 
+                              'games_played': champ_games_played[i], 
+                              'KDA_ratio': champ_KDA_ratio[i], 
+                              'CS_earned': champ_CS_earned[i], 
+                              'gold_earned': champ_gold_earned[i]
+                          } 
+                          },
+                          upsert = True)
 
     return

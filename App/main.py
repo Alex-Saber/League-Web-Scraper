@@ -1,13 +1,14 @@
 from flask import Flask, request, render_template
-from flask_pymongo import PyMongo
 from Scripts import bs4_Scrape_LOL
+from Scripts import get_Stats
 
 app = Flask("Scrape")
 app.config['TEMPLATES_AUTO_RELOAD'] = True
-mongo = PyMongo(app)
 
 
-#Home Page
+# Home Page
 @app.route('/')
-def home(data=bs4_Scrape_LOL.grab_data()):
-    return render_template("home.html", n=1, data=data)
+# These parameters call store_data() to scrape and store the champion stats
+# and get_data() to access the champion stats for display
+def home(store=bs4_Scrape_LOL.store_data(), data=get_Stats.get_data()):
+    return render_template("home.html", data=data, store=store)

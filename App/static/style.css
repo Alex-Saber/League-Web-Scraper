@@ -1,3 +1,28 @@
 h1 {
-	color: blue;
+	color: skyblue;
+	text-align: center;
 }
+
+
+table {
+	width: 100%;
+	border-collapse: collapse;
+	border: 2px groove skyblue;
+}
+
+th {
+	border-bottom: 2px groove #eeeeee;
+	height: 50px;
+}
+
+td {
+	color: #498fff;
+	border-bottom: 2px groove #eeeeee;
+	height: 30px;
+	text-align: center;
+}
+
+tr:hover {
+	background-color: #ffAADD;
+}
+

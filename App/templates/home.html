@@ -1,20 +1,42 @@
 <!doctype html>
 <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
 
-<!--% from flask_pymongo import PyMongo %}-->
-<table style ="width:2000">
+<h1>League of Legends</h1>
+<h1>Champion Statistics</h1>
+
+<table>	
 	<tr>
-		<th>...</th>
-	
-		<th>...</th>
-		<th>...</th>
-		<th>...</th>
+		<th>Champion</th>	
+		<th>Win Rate</th>
+		<th>Games Played</th>
+		<th>KDA</th>
+		<th>CS</th>
+		<th>Gold</th>
 	</tr>
-	<td>
 
-	</td>
-<h1>League of Legends: Champion Winrates</h1>
-
-<h1>{{data['names'][0]}}</h1>
+	<!-- Iterating over the champion stats and creating table rows for each champion (140 in total) -->
+	{% for x in range(0, 140): %}
+	<tr>
+		<td>
+			{{data['names'][x]}}
+		</td>
+		<td>
+			{{data['win_rates'][x]}}	
+		</td>
+		<td>
+			{{data['games_played'][x]}}	
+		</td>
+		<td>
+			{{data['KDA'][x]}}	
+		</td>
+		<td>
+			{{data['CS'][x]}}	
+		</td>
+		<td>
+			{{data['gold'][x]}}	
+		</td>
+	</tr>
+	{% endfor %}
+</table>
 
 

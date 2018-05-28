@@ -1,4 +1,5 @@
 from selenium import webdriver
+from selenium.webdriver.chrome.options import Options
 import bs4 as bs
 import urllib.request
 import pymongo
@@ -8,7 +9,9 @@ import sys
 def store_data():
 
     # Creating chrome instance in order to connect to the desired webpage.
-    driver = webdriver.Chrome()
+    chrome_options = Options()
+    chrome_options.add_argument("--headless")
+    driver = webdriver.Chrome(chrome_options=chrome_options)
     driver.get('http://www.op.gg/statistics/champion/')
 
     # Transfering webpage HTML into a BeautifulSoup4 object to parse it for data.

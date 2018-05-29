@@ -20,7 +20,7 @@ def get_data():
 
     # For each entry in the database collection grab the appropriate data
     # and add it to the appropriate list.
-    for entry in db.champs.find().sort('win_rate', -1): 
+    for entry in champs.find(): 
         champ_names.append(entry['name'])
         champ_win_rate.append(entry['win_rate'])
         champ_games_played.append(entry['games_played'])

@@ -58,15 +58,14 @@ def store_data():
     for i in range(0, len(champ_names)):
         # Query Database for champ name, 
         # if it exists update it otherwise create a new document
-        champs.update_one({'name': champ_names[i]},
+        champs.update_one({ 'name': champ_names[i]},
                           { '$set': {
                               'win_rate': champ_win_rate[i], 
                               'games_played': champ_games_played[i], 
                               'KDA_ratio': champ_KDA_ratio[i], 
                               'CS_earned': champ_CS_earned[i], 
-                              'gold_earned': champ_gold_earned[i]
-                          } 
-                          },
-                          upsert = True)
+                              'gold_earned': champ_gold_earned[i]}
+                              },
+                            upsert = True)
 
     return
